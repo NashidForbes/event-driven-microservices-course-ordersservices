@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.projectlombok:lombok'
+    implementation 'com.appdevelopersblog.estore:core:0.0.1-SNAPSHOT'
     implementation 'org.axonframework:axon-spring-boot-starter:4.5.5'
     implementation 'com.google.guava:guava:31.0.1-jre'
     runtimeOnly 'com.h2database:h2'
