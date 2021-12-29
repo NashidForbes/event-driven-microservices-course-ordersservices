@@ -2,6 +2,7 @@ package com.appsdeveloperblog.estore.ordersservice.saga;
 
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
+import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -38,5 +39,10 @@ public class OrderSaga {
                 }
             }
         });
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservedEvent productReservedEvent){
+        // Process user payment
     }
 }
