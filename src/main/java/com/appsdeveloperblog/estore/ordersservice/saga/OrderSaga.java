@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.ordersservice.saga;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservedEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -12,6 +13,7 @@ import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Slf4j
 @Saga
 public class OrderSaga {
     // Since @Saga creates serialization use transient
@@ -29,13 +31,17 @@ public class OrderSaga {
                 .userId(orderCreatedEvent.getUserId())
                 .build();
 
+        log.info("OrderCreatedEvent handled for orderId: " + reserveProductCommand.getOrderId() +
+                " and productId: " + reserveProductCommand.getProductId());
+
         commandGateway.send(reserveProductCommand, new CommandCallback<ReserveProductCommand, Object>() {
 
             @Override
             public void onResult(CommandMessage<? extends ReserveProductCommand> commandMessage,
-                                 CommandResultMessage<?> commandResultMessage) {
+                                 CommandResultMessage<? extends Object> commandResultMessage) {
                 if(commandResultMessage.isExceptional()){
                     // Start a compensating transaction
+                    log.info("Starting a compensating transaction.");
                 }
             }
         });
@@ -44,5 +50,7 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(ProductReservedEvent productReservedEvent){
         // Process user payment
+        log.info("ProductReservedEvent handled for productId: " + productReservedEvent.getProductId() +
+                " and orderId: " + productReservedEvent.getOrderId());
     }
 }
