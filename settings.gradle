@@ -1,3 +1,4 @@
 rootProject.name = 'OrdersService'
-include ':saga-core-api'
-project(':saga-core-api').projectDir = new File('../saga-core-api')
+include ':sagacoreapi'
+project(':sagacoreapi').projectDir = new File('../sagacoreapi')
+
