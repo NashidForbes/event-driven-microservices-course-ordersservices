@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.ordersservice.saga;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservedEvent;
+import com.thoughtworks.xstream.XStream;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -24,6 +25,14 @@ public class OrderSaga {
     @StartSaga
     @SagaEventHandler(associationProperty="orderId")
     public void handle(OrderCreatedEvent orderCreatedEvent){
+        XStream xstream = new XStream();
+
+        xstream.allowTypesByWildcard(new String[] {
+                "com.appsdeveloperblog.estore.sagacoreapi.**",
+                "com.appsdeveloperblog.estore.ordersservice.**",
+                "com.appsdeveloperblog.estore.productsservice.**",
+        });
+
         ReserveProductCommand reserveProductCommand = ReserveProductCommand.builder()
                 .orderId(orderCreatedEvent.getOrderId())
                 .productId(orderCreatedEvent.getProductId())
