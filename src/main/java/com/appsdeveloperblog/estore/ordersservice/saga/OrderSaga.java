@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.ordersservice.saga;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
+import com.appsdeveloperblog.estore.sagacoreapi.events.PaymentProcessedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.models.User;
 import com.appsdeveloperblog.estore.sagacoreapi.query.FetchUserPaymentDetailsQuery;
@@ -114,6 +115,12 @@ public class OrderSaga {
             // Start compensating transaction
             log.error("The ProcessPaymentCommand resulted in NULL. Initiating a compensating transaction ");
         }
+
+    }
+
+    // For payment process event
+    @SagaEventHandler(associationProperty="orderId")
+    public void handle(PaymentProcessedEvent paymentProcessedEvent){
 
     }
 }
