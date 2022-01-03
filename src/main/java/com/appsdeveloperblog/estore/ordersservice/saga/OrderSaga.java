@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.estore.ordersservice.saga;
 
 import com.appsdeveloperblog.estore.ordersservice.command.models.ApproveOrderCommand;
+import com.appsdeveloperblog.estore.ordersservice.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
@@ -15,7 +16,9 @@ import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
+import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
@@ -127,5 +130,14 @@ public class OrderSaga {
                 new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
         
         commandGateway.send(approveOrderCommand);
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty="orderId")
+    public void handle(OrderApprovedEvent orderApprovedEvent){
+        log.info("Order is approved. Order saga is complete for order id: " + orderApprovedEvent.getOrderId());
+        // another way to end Saga life cycle instead of using annotation
+        // can add custom logic to end the Saga life cycle based on certain conditions.
+        // SagaLifecycle.end();
     }
 }
