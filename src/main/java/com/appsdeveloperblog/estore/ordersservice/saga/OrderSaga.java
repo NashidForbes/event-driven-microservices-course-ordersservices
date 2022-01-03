@@ -4,6 +4,7 @@ import com.appsdeveloperblog.estore.ordersservice.command.models.ApproveOrderCom
 import com.appsdeveloperblog.estore.ordersservice.command.models.RejectOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.ordersservice.core.events.OrderRejectedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.CancelProductReservationCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
@@ -160,5 +161,11 @@ public class OrderSaga {
         // Create and send a RejectOrderCommand
         RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(productReservationCancelledEvent.getOrderId(),
                 productReservationCancelledEvent.getReason());
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderRejectedEvent orderRejectedEvent){
+        log.info("Successfully rejected order with id " + orderRejectedEvent.getOrderId());
     }
 }
