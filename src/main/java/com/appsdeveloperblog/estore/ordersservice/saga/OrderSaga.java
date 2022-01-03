@@ -41,13 +41,6 @@ public class OrderSaga {
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderCreatedEvent orderCreatedEvent) {
-        XStream xstream = new XStream();
-
-        xstream.allowTypesByWildcard(new String[]{
-                "com.appsdeveloperblog.estore.sagacoreapi.**",
-                "com.appsdeveloperblog.estore.ordersservice.**",
-                "com.appsdeveloperblog.estore.productsservice.**",
-        });
 
         ReserveProductCommand reserveProductCommand = ReserveProductCommand.builder()
                 .orderId(orderCreatedEvent.getOrderId())
@@ -66,7 +59,7 @@ public class OrderSaga {
                                  CommandResultMessage<? extends Object> commandResultMessage) {
                 if (commandResultMessage.isExceptional()) {
                     // Start a compensating transaction
-                    log.info("Starting a compensating transaction.");
+                    log.error("Starting a compensating transaction.");
                 }
             }
         });
@@ -86,13 +79,14 @@ public class OrderSaga {
         try {
            userPaymentDetails = queryGateway.query(FetchUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            log.error("User Payment details: " + ex.getMessage());
 
             // Start compensating transaction
             return;
         }
 
         if(userPaymentDetails == null){
+            log.error("User Payment details are null ");
             // Start compensating transaction
             return;
         }
@@ -109,7 +103,7 @@ public class OrderSaga {
 
         String result = null;
         try {
-            commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS);
+            result = commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS);
         } catch (Exception ex) {
             // Start compensating transaction
             log.error("Starting compensating transaction " + ex.getMessage());

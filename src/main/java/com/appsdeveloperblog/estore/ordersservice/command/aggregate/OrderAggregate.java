@@ -71,14 +71,15 @@ public class OrderAggregate {
     }
 
     @CommandHandler
-    public void handle(ApproveOrderCommand approveOrderCommand){
+    public void handle(ApproveOrderCommand approveOrderCommand) {
         // Create and publish the OrderApprovedEvent
         OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(approveOrderCommand.getOrderId());
 
         AggregateLifecycle.apply(orderApprovedEvent);
     }
 
-    protected void on(OrderApprovedEvent orderApprovedEvent){
+    @EventSourcingHandler
+    protected void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
 }
