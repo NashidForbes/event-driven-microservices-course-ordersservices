@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.ordersservice.command.aggregate;
 import com.appsdeveloperblog.estore.ordersservice.command.models.ApproveOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.command.models.CreateOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.command.models.OrderStatus;
+import com.appsdeveloperblog.estore.ordersservice.command.models.RejectOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
@@ -81,5 +82,10 @@ public class OrderAggregate {
     @EventSourcingHandler
     protected void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
+    }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand){
+
     }
 }
