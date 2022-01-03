@@ -1,5 +1,6 @@
 package com.appsdeveloperblog.estore.ordersservice.command.aggregate;
 
+import com.appsdeveloperblog.estore.ordersservice.command.models.ApproveOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.command.models.CreateOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.command.models.OrderStatus;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
@@ -66,5 +67,10 @@ public class OrderAggregate {
         this.addressId = orderCreatedEvent.getAddressId();
         this.orderStatus = orderCreatedEvent.getOrderStatus();
 
+    }
+
+    @CommandHandler
+    public void handle(ApproveOrderCommand approveOrderCommand){
+        // Create and publish the OrderApprovedEvent
     }
 }
