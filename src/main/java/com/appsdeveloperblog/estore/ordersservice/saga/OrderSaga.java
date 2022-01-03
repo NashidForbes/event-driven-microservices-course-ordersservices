@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.estore.ordersservice.saga;
 
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.models.User;
@@ -17,6 +18,9 @@ import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Saga
@@ -89,5 +93,27 @@ public class OrderSaga {
         }
 
         log.info("Successfully fetched user payment details for user " + userPaymentDetails.getFirstName());
+
+        // Here is where you process the payment after Reserving product and fetching payment details from
+        // user
+        ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand.builder()
+                .orderId(productReservedEvent.getOrderId())
+                .paymentDetails(userPaymentDetails.getPaymentDetails())
+                .paymentId(UUID.randomUUID().toString())
+                .build();
+
+        String result = null;
+        try {
+            commandGateway.sendAndWait(processPaymentCommand, 10, TimeUnit.SECONDS);
+        } catch (Exception ex) {
+            // Start compensating transaction
+            log.error("Starting compensating transaction " + ex.getMessage());
+        }
+
+        if(result == null){
+            // Start compensating transaction
+            log.error("The ProcessPaymentCommand resulted in NULL. Initiating a compensating transaction ");
+        }
+
     }
 }
