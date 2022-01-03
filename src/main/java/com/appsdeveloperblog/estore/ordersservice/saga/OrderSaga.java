@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.estore.ordersservice.saga;
 
 import com.appsdeveloperblog.estore.ordersservice.command.models.ApproveOrderCommand;
+import com.appsdeveloperblog.estore.ordersservice.command.models.RejectOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.CancelProductReservationCommand;
@@ -157,5 +158,7 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(ProductReservationCancelledEvent productReservationCancelledEvent){
         // Create and send a RejectOrderCommand
+        RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(productReservationCancelledEvent.getOrderId(),
+                productReservationCancelledEvent.getReason());
     }
 }
