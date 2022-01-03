@@ -7,6 +7,7 @@ import com.appsdeveloperblog.estore.sagacoreapi.commands.CancelProductReservatio
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.events.PaymentProcessedEvent;
+import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservationCancelledEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.events.ProductReservedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.models.User;
 import com.appsdeveloperblog.estore.sagacoreapi.query.FetchUserPaymentDetailsQuery;
@@ -150,5 +151,11 @@ public class OrderSaga {
         // another way to end Saga life cycle instead of using annotation
         // can add custom logic to end the Saga life cycle based on certain conditions.
         // SagaLifecycle.end();
+    }
+
+    // new event handler to start event that order has been cancelled
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservationCancelledEvent productReservationCancelledEvent){
+        // Create and send a RejectOrderCommand
     }
 }
