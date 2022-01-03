@@ -1,5 +1,6 @@
 package com.appsdeveloperblog.estore.ordersservice.saga;
 
+import com.appsdeveloperblog.estore.ordersservice.command.models.ApproveOrderCommand;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
@@ -121,6 +122,10 @@ public class OrderSaga {
     // For payment process event
     @SagaEventHandler(associationProperty="orderId")
     public void handle(PaymentProcessedEvent paymentProcessedEvent){
-
+        // Send an ApprovedOrderCommand
+        ApproveOrderCommand approveOrderCommand = 
+                new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
+        
+        commandGateway.send(approveOrderCommand);
     }
 }

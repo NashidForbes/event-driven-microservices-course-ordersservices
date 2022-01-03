@@ -1,7 +1,7 @@
 package com.appsdeveloperblog.estore.ordersservice.command.aggregate;
 
-import com.appsdeveloperblog.estore.ordersservice.command.rest.models.CreateOrderCommand;
-import com.appsdeveloperblog.estore.ordersservice.command.rest.models.OrderStatus;
+import com.appsdeveloperblog.estore.ordersservice.command.models.CreateOrderCommand;
+import com.appsdeveloperblog.estore.ordersservice.command.models.OrderStatus;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;

@@ -1,8 +1,8 @@
 package com.appsdeveloperblog.estore.ordersservice.command.rest.controller;
 
-import com.appsdeveloperblog.estore.ordersservice.command.rest.models.CreateOrderCommand;
-import com.appsdeveloperblog.estore.ordersservice.command.rest.models.CreateOrderRestModel;
-import com.appsdeveloperblog.estore.ordersservice.command.rest.models.OrderStatus;
+import com.appsdeveloperblog.estore.ordersservice.command.models.CreateOrderCommand;
+import com.appsdeveloperblog.estore.ordersservice.command.models.CreateOrderRestModel;
+import com.appsdeveloperblog.estore.ordersservice.command.models.OrderStatus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
