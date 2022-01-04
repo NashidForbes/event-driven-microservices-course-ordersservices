@@ -196,6 +196,8 @@ public class OrderSaga {
         // Create and send a RejectOrderCommand
         RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(productReservationCancelledEvent.getOrderId(),
                 productReservationCancelledEvent.getReason());
+
+        commandGateway.send(rejectOrderCommand);
     }
 
     @EndSaga
