@@ -5,6 +5,7 @@ import org.axonframework.config.ConfigurationScopeAwareProvider;
 import org.axonframework.deadline.DeadlineManager;
 import org.axonframework.deadline.SimpleDeadlineManager;
 import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -20,12 +21,15 @@ public class OrdersServiceApplication {
         SpringApplication.run(OrdersServiceApplication.class, args);
     }
 
+    // TODO figure out how to properly autowire configuration and
+    // SpringTransactionManager into deadlineManager
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(SpringTransactionManager.class)
+    @ConditionalOnBean({SpringTransactionManager.class, Configuration.class})
+    @Autowired
     public DeadlineManager deadlineManager(Configuration configuration,
                                            SpringTransactionManager transactionManager) {
-
+        configuration.start();
         return SimpleDeadlineManager.builder()
                 .scopeAwareProvider(new ConfigurationScopeAwareProvider(configuration))
                 .transactionManager(transactionManager)
