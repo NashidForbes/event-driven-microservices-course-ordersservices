@@ -117,8 +117,8 @@ public class OrderSaga {
         scheduleId = deadlineManager.schedule(Duration.of(10, ChronoUnit.SECONDS),
                 PAYMENT_PROCESSING_TIMEOUT_DEADLINE, userPaymentDetails);
 
-        // TODO remove after testing
-        if (true) return;
+        // TODO uncomment out to test deadline manager functionality
+        // if (true) return;
 
         // Here is where you process the payment after Reserving product and fetching payment details from
         // user
