@@ -61,7 +61,15 @@ public class OrderSaga {
                                  CommandResultMessage<? extends Object> commandResultMessage) {
                 if (commandResultMessage.isExceptional()) {
                     // Start a compensating transaction
-                    log.error("Starting a compensating transaction.");
+                    log.error("Starting a compensating transaction. "
+                            + commandResultMessage.exceptionResult().getMessage());
+
+                    RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(orderCreatedEvent.getOrderId(),
+                            commandResultMessage.exceptionResult().getMessage());
+
+                    commandGateway.send(rejectOrderCommand);
+
+
                 }
             }
         });
