@@ -5,6 +5,8 @@ import com.appsdeveloperblog.estore.ordersservice.command.models.RejectOrderComm
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.ordersservice.core.events.OrderRejectedEvent;
+import com.appsdeveloperblog.estore.ordersservice.query.FindOrderQuery;
+import com.appsdeveloperblog.estore.ordersservice.query.model.OrderSummary;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.CancelProductReservationCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.sagacoreapi.commands.ReserveProductCommand;
@@ -25,6 +27,7 @@ import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,6 +48,8 @@ public class OrderSaga {
     private transient QueryGateway queryGateway;
     @Autowired
     private transient DeadlineManager deadlineManager;
+    @Autowired 
+    private transient QueryUpdateEmitter queryUpdateEmitter;
     private String scheduleId;
 
     @StartSaga
@@ -188,6 +193,8 @@ public class OrderSaga {
         // another way to end Saga life cycle instead of using annotation
         // can add custom logic to end the Saga life cycle based on certain conditions.
         // SagaLifecycle.end();
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderApprovedEvent.getOrderId(),
+                orderApprovedEvent.getOrderStatus(), ""));
     }
 
     // new event handlers to start event that order has been cancelled
@@ -204,6 +211,9 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderRejectedEvent orderRejectedEvent) {
         log.info("Successfully rejected order with id " + orderRejectedEvent.getOrderId());
+
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderRejectedEvent.getOrderId(),
+                orderRejectedEvent.getOrderStatus(), orderRejectedEvent.getReason()));
     }
 
     // Deadline handlers method
