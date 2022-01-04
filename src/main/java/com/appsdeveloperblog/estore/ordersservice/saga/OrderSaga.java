@@ -190,7 +190,7 @@ public class OrderSaga {
         // SagaLifecycle.end();
     }
 
-    // new event handler to start event that order has been cancelled
+    // new event handlers to start event that order has been cancelled
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
         // Create and send a RejectOrderCommand
@@ -206,7 +206,7 @@ public class OrderSaga {
         log.info("Successfully rejected order with id " + orderRejectedEvent.getOrderId());
     }
 
-    // Deadline handler method
+    // Deadline handlers method
     @DeadlineHandler(deadlineName = PAYMENT_PROCESSING_TIMEOUT_DEADLINE)
     public void handlePaymentDeadline(ProductReservedEvent productReservedEvent) {
         log.info("Payment processing deadline took place. Sending a compensating " +
