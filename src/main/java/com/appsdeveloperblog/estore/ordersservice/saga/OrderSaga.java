@@ -46,10 +46,12 @@ public class OrderSaga {
     private transient CommandGateway commandGateway;
     @Autowired
     private transient QueryGateway queryGateway;
-    @Autowired
-    private transient DeadlineManager deadlineManager;
-    @Autowired 
-    private transient QueryUpdateEmitter queryUpdateEmitter;
+    // TODO enable deadlineManager
+/*    @Autowired
+    private transient DeadlineManager deadlineManager;*/
+    // TODO enable queryUpdateEmitter
+/*    @Autowired
+    private transient QueryUpdateEmitter queryUpdateEmitter;*/
     private String scheduleId;
 
     @StartSaga
@@ -119,8 +121,8 @@ public class OrderSaga {
 
         // execute a task after a set amount of time, similar to a Cron job.
         // sent userPaymentDetails
-        scheduleId = deadlineManager.schedule(Duration.of(10, ChronoUnit.SECONDS),
-                PAYMENT_PROCESSING_TIMEOUT_DEADLINE, userPaymentDetails);
+/*        scheduleId = deadlineManager.schedule(Duration.of(10, ChronoUnit.SECONDS),
+                PAYMENT_PROCESSING_TIMEOUT_DEADLINE, userPaymentDetails);*/
 
         // TODO uncomment out to test deadline manager functionality
         // if (true) return;
@@ -180,10 +182,11 @@ public class OrderSaga {
     }
 
     private void cancelDeadline() {
-        if (scheduleId != null) {
+        // TODO enable deadlineManager
+/*        if (scheduleId != null) {
             deadlineManager.cancelSchedule(PAYMENT_PROCESSING_TIMEOUT_DEADLINE, scheduleId);
             scheduleId = null;
-        }
+        }*/
     }
 
     @EndSaga
@@ -193,8 +196,10 @@ public class OrderSaga {
         // another way to end Saga life cycle instead of using annotation
         // can add custom logic to end the Saga life cycle based on certain conditions.
         // SagaLifecycle.end();
-        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderApprovedEvent.getOrderId(),
-                orderApprovedEvent.getOrderStatus(), ""));
+
+        // TODO get queryUpdateEmitter working with @Autowire
+/*        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderApprovedEvent.getOrderId(),
+                orderApprovedEvent.getOrderStatus(), ""));*/
     }
 
     // new event handlers to start event that order has been cancelled
@@ -212,8 +217,9 @@ public class OrderSaga {
     public void handle(OrderRejectedEvent orderRejectedEvent) {
         log.info("Successfully rejected order with id " + orderRejectedEvent.getOrderId());
 
-        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderRejectedEvent.getOrderId(),
-                orderRejectedEvent.getOrderStatus(), orderRejectedEvent.getReason()));
+        // TODO get queryUpdateEmitter working with @Autowire
+/*        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderRejectedEvent.getOrderId(),
+                orderRejectedEvent.getOrderStatus(), orderRejectedEvent.getReason()));*/
     }
 
     // Deadline handlers method
