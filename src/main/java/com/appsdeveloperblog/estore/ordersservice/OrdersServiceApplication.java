@@ -23,15 +23,15 @@ public class OrdersServiceApplication {
 
     // TODO figure out how to properly autowire configuration and
     // SpringTransactionManager into deadlineManager
-/*    @Bean
+    @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean({SpringTransactionManager.class, Configuration.class})
     public DeadlineManager deadlineManager(Configuration configuration,
                                            SpringTransactionManager transactionManager) {
-        configuration.start();
+        //configuration.start();
         return SimpleDeadlineManager.builder()
                 .scopeAwareProvider(new ConfigurationScopeAwareProvider(configuration))
                 .transactionManager(transactionManager)
                 .build();
-    }*/
+    }
 }

@@ -50,8 +50,8 @@ public class OrderSaga {
 /*    @Autowired
     private transient DeadlineManager deadlineManager;*/
     // TODO enable queryUpdateEmitter
-/*    @Autowired
-    private transient QueryUpdateEmitter queryUpdateEmitter;*/
+    @Autowired
+    private transient QueryUpdateEmitter queryUpdateEmitter;
     private String scheduleId;
 
     @StartSaga
